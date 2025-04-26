@@ -27,8 +27,12 @@ def get_routes_from_transportation_system_id(transportation_system_id):
 def get_stops_from_transportation_system_id(transportation_system_id):
     return passiogo.getSystemFromID(transportation_system_id).getStops()
 
+
 def get_alerts_from_transportation_system_id(transportation_system_id):
     return passiogo.getSystemFromID(transportation_system_id).getSystemAlerts()
+
+def get_vehicles_from_transportation_system_id(transportation_system_id):
+    return passiogo.getSystemFromID(transportation_system_id).getVehicles()
 
 @mcp.tool()
 def get_routes_from_transportation_system(transportation_system_name: str):
@@ -224,13 +228,42 @@ def get_alerts_from_transportation_system(transportation_system_name: str):
     return serializable_alerts
 
 
+@mcp.tool()
+def get_vehicles_from_transportation_system(transportation_system_name: str):
+    """
+    Finds the vehicles of a transportation system by its name.
+    Args:
+        transportation_system_name: The approximate name of the transportation system (e.g., 'Georgia Tec', 'University of Arkansas', 'West Midtown Shuttle').
+    Returns:
+        A list of dictionaries containing the information about the vehicles.
+    """
+    transportation_system_id = get_id_from_transportation_systems_map(transportation_system_name)
+    if not transportation_system_id:
+        raise ValueError(f"Transportation system '{transportation_system_name}' not found.")
+    
+    print(transportation_system_id)
+    vehicles = get_vehicles_from_transportation_system_id(transportation_system_id)
+    if not vehicles:
+        raise ValueError(f"No vehicles found for transportation system ID '{transportation_system_id}'.")
+
+    serializable_vehicles = []
+    for vehicle in vehicles:
+        vehicle_dict = vars(vehicle)
+        # Remove non-serializable attributes
+        if "system" in vehicle_dict:
+            del vehicle_dict["system"]        
+        serializable_vehicles.append(vehicle_dict)
+
+    return serializable_vehicles
+
+
 '''def main():
     print("Hello from passiogo-mcp-server!")
     print(f"Loaded {len(transportation_systems_map)} transportation systems.")
     approximate_transportation_system_name = "University of Arkansas"
 
-    alerts = get_alerts_from_transportation_system(approximate_transportation_system_name)
-    print(alerts)'''
+    vehicles = get_vehicles_from_transportation_system(approximate_transportation_system_name)
+    print(vehicles)'''
 
 
 if __name__ == "__main__":
