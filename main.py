@@ -27,6 +27,8 @@ def get_routes_from_transportation_system_id(transportation_system_id):
 def get_stops_from_transportation_system_id(transportation_system_id):
     return passiogo.getSystemFromID(transportation_system_id).getStops()
 
+def get_alerts_from_transportation_system_id(transportation_system_id):
+    return passiogo.getSystemFromID(transportation_system_id).getSystemAlerts()
 
 @mcp.tool()
 def get_routes_from_transportation_system(transportation_system_name: str):
@@ -193,16 +195,42 @@ def get_stops_from_route(route_name: str, transportation_system_name: str):
     return serializable_stops
 
 
+@mcp.tool()
+def get_alerts_from_transportation_system(transportation_system_name: str):
+    """
+    Finds the alerts of a transportation system by its name.
+    Args:
+        transportation_system_name: The approximate name of the transportation system (e.g., 'Georgia Tec', 'University of Arkansas', 'West Midtown Shuttle').
+    Returns:
+        A list of dictionaries containing the information about the alerts.
+    """
+
+    transportation_system_id = get_id_from_transportation_systems_map(transportation_system_name)
+    if not transportation_system_id:
+        raise ValueError(f"Transportation system '{transportation_system_name}' not found.")
+    
+    alerts = get_alerts_from_transportation_system_id(transportation_system_id)
+    if not alerts:
+        raise ValueError(f"No alerts found for transportation system ID '{transportation_system_id}'.")
+    
+    serializable_alerts = []
+    for alert in alerts:
+        alert_dict = vars(alert)
+        # Remove non-serializable attributes
+        if "system" in alert_dict:
+            del alert_dict["system"]        
+        serializable_alerts.append(alert_dict)
+
+    return serializable_alerts
+
+
 '''def main():
     print("Hello from passiogo-mcp-server!")
     print(f"Loaded {len(transportation_systems_map)} transportation systems.")
     approximate_transportation_system_name = "University of Arkansas"
-    approximate_stop_name = "Union"
 
-    stop = get_stop_from_transportation_system(approximate_stop_name, approximate_transportation_system_name)
-    print(stop)
-    #stops = get_stops_from_route(approximate_route_name, approximate_transportation_system_name)
-    #print(stops)'''
+    alerts = get_alerts_from_transportation_system(approximate_transportation_system_name)
+    print(alerts)'''
 
 
 if __name__ == "__main__":
