@@ -35,13 +35,13 @@ email: dusenka.jozef@gmail.com
 - MCP client then automatically desides if any of the tools are needed to answer the question
 
 ## Example
-###User:
+### User:
 I'm at the union station at the University of Arkansas. What busses are stopping here in the next 5 minutes?
 I would like to go north to the agricultural part of the campus. What busses can I take?
 
 ---
 
-###Claude Desktop:
+### Claude Desktop:
 I'll help you find out which buses are stopping at Union Station at the University of Arkansas in the next few minutes. Let me check the transportation system information.
 
 Now I'll check for the active vehicles that will be arriving at Union Station soon:
@@ -59,11 +59,12 @@ Since bus #27, #43, and #32 appear to be very close to or at Union Station based
 
 ---
 
-###User:
+### User:
 I would like to go north to the agricultural part of the campus. What busses can I take?
 
 ---
 
+### Claude Desktop
 I'll help you find buses that go north to the agricultural part of campus from Union Station.
 Let me check which routes from Union Station head to the northern agricultural areas of the University of Arkansas campus.
 
