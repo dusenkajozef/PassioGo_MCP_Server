@@ -38,7 +38,7 @@ email: dusenka.jozef@gmail.com
 User:
 I'm at the union station at the University of Arkansas. What busses are stopping here in the next 5 minutes?
 I would like to go north to the agricultural part of the campus. What busses can I take?
-----------------------------------------------------------------------------------------------
+---
 Claude Desktop:
 I'll help you find out which buses are stopping at Union Station at the University of Arkansas in the next few minutes. Let me check the transportation system information.
 
@@ -54,10 +54,10 @@ Route 48 Peak (Pink Bus #32) - Currently near Union Station
 
 Please note there's an active alert that the Passio live map is experiencing some issues today, which may affect the accuracy of real-time arrival predictions. The transportation system is called Razorback Transit at the University of Arkansas.
 Since bus #27, #43, and #32 appear to be very close to or at Union Station based on their coordinates, these are your best options within the next 5 minutes. If you need to go to a specific destination, let me know and I can help determine which route would be best for you.
-------------------------------------------------------------------------------------------------
+---
 User:
 I would like to go north to the agricultural part of the campus. What busses can I take?
-------------------------------------------------------------------------------------------------
+---
 I'll help you find buses that go north to the agricultural part of campus from Union Station.
 Let me check which routes from Union Station head to the northern agricultural areas of the University of Arkansas campus.
 
