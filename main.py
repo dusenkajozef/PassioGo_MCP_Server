@@ -1,38 +1,12 @@
 from mcp.server.fastmcp import FastMCP
-from dotenv import load_dotenv
-from transportation_systems_map import transportation_systems_map
 from rapidfuzz import process
-import passiogo
+from passiogo_client import get_routes_from_transportation_system_id, get_stops_from_transportation_system_id, get_alerts_from_transportation_system_id, get_vehicles_from_transportation_system_id
+from core_utils import get_id_from_transportation_systems_map, serialize_without_system_field
 
-load_dotenv()
 
 mcp = FastMCP("passiogo-mcp-server")
-
 USER_AGENT = "passiogo-agent/1.0"
 
-
-def get_id_from_transportation_systems_map(transportation_system_name):
-    # Use rapidFuzz to find the closest match
-    match = process.extractOne(transportation_system_name, transportation_systems_map.keys())
-    if match:
-        return(transportation_systems_map[match[0]])
-    else:
-        return None
-    
-
-def get_routes_from_transportation_system_id(transportation_system_id):
-    return passiogo.getSystemFromID(transportation_system_id).getRoutes()
-
-
-def get_stops_from_transportation_system_id(transportation_system_id):
-    return passiogo.getSystemFromID(transportation_system_id).getStops()
-
-
-def get_alerts_from_transportation_system_id(transportation_system_id):
-    return passiogo.getSystemFromID(transportation_system_id).getSystemAlerts()
-
-def get_vehicles_from_transportation_system_id(transportation_system_id):
-    return passiogo.getSystemFromID(transportation_system_id).getVehicles()
 
 @mcp.tool()
 def get_routes_from_transportation_system(transportation_system_name: str):
@@ -52,14 +26,7 @@ def get_routes_from_transportation_system(transportation_system_name: str):
     if not routes:
         raise ValueError(f"No routes found for transportation system ID '{transportation_system_id}'.")
     
-    serializable_routes = []
-    for route in routes:
-        route_dict = vars(route)
-        # Remove non-serializable attributes
-        if "system" in route_dict:
-            del route_dict["system"]        
-        serializable_routes.append(route_dict)
-
+    serializable_routes = [serialize_without_system_field(route) for route in routes]
     return serializable_routes
 
 
@@ -90,11 +57,7 @@ def get_route_from_transportation_system(transportation_system_name: str, route_
     else:
         raise ValueError(f"Route '{route_name}' not found in transportation system ID '{transportation_system_id}'.")
     
-    route_dict = vars(route)
-    # Remove non-serializable attributes
-    if "system" in route_dict:
-        del route_dict["system"]
-    
+    route_dict = serialize_without_system_field(route)
     return route_dict
 
 
@@ -116,13 +79,7 @@ def get_stops_from_transportation_system(transportation_system_name: str):
     if not stops:
         raise ValueError(f"No stops found for transportation system ID '{transportation_system_id}'.")
     
-    serializable_stops = []
-    for stop in stops:
-        stop_dict = vars(stop)
-        # Remove non-serializable attributes
-        if "system" in stop_dict:
-            del stop_dict["system"]        
-        serializable_stops.append(stop_dict)
+    serializable_stops = [serialize_without_system_field(stop) for stop in stops]
     return serializable_stops
 
 
@@ -153,11 +110,7 @@ def get_stop_from_transportation_system(stop_name: str, transportation_system_na
     else:
         raise ValueError(f"Stop '{stop_name}' not found in transportation system ID '{transportation_system_id}'.")
 
-    stop_dict = vars(stop)
-    # Remove non-serializable attributes
-    if "system" in stop_dict:
-        del stop_dict["system"]
-
+    stop_dict = serialize_without_system_field(stop)
     return stop_dict
 
 
@@ -181,21 +134,16 @@ def get_stops_from_route(route_name: str, transportation_system_name: str):
     
     # Use rapidFuzz to find the closest match
     route_match = process.extractOne(route_name, [route.name for route in routes])
-    print(route_match)
     if route_match:
         route = routes[route_match[2]]
     else:
         raise ValueError(f"Route '{route_name}' not found in transportation system ID '{transportation_system_id}'.")
+    
     stops = route.getStops()
     if not stops:
         raise ValueError(f"No stops found for route ID '{route.id}' in transportation system ID '{transportation_system_id}'.")
-    serializable_stops = []
-    for stop in stops:
-        stop_dict = vars(stop)
-        # Remove non-serializable attributes
-        if "system" in stop_dict:
-            del stop_dict["system"]        
-        serializable_stops.append(stop_dict)
+    
+    serializable_stops = [serialize_without_system_field(stop) for stop in stops]
     return serializable_stops
 
 
@@ -217,14 +165,7 @@ def get_alerts_from_transportation_system(transportation_system_name: str):
     if not alerts:
         raise ValueError(f"No alerts found for transportation system ID '{transportation_system_id}'.")
     
-    serializable_alerts = []
-    for alert in alerts:
-        alert_dict = vars(alert)
-        # Remove non-serializable attributes
-        if "system" in alert_dict:
-            del alert_dict["system"]        
-        serializable_alerts.append(alert_dict)
-
+    serializable_alerts = [serialize_without_system_field(alert) for alert in alerts]
     return serializable_alerts
 
 
@@ -241,19 +182,11 @@ def get_vehicles_from_transportation_system(transportation_system_name: str):
     if not transportation_system_id:
         raise ValueError(f"Transportation system '{transportation_system_name}' not found.")
     
-    print(transportation_system_id)
     vehicles = get_vehicles_from_transportation_system_id(transportation_system_id)
     if not vehicles:
         raise ValueError(f"No vehicles found for transportation system ID '{transportation_system_id}'.")
 
-    serializable_vehicles = []
-    for vehicle in vehicles:
-        vehicle_dict = vars(vehicle)
-        # Remove non-serializable attributes
-        if "system" in vehicle_dict:
-            del vehicle_dict["system"]        
-        serializable_vehicles.append(vehicle_dict)
-
+    serializable_vehicles = [serialize_without_system_field(vehicle) for vehicle in vehicles]
     return serializable_vehicles
 
 
