@@ -37,7 +37,6 @@ email: dusenka.jozef@gmail.com
 ## Example
 ### User:
 I'm at the union station at the University of Arkansas. What busses are stopping here in the next 5 minutes?
-I would like to go north to the agricultural part of the campus. What busses can I take?
 
 ---
 
