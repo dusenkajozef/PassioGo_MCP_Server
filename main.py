@@ -1,6 +1,7 @@
 import asyncio
 import os
-from mcp.server.fastmcp import FastMCP
+#from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 from rapidfuzz import process
 from passiogo_client import get_routes_from_transportation_system_id, get_stops_from_transportation_system_id, get_alerts_from_transportation_system_id, get_vehicles_from_transportation_system_id
 from core_utils import get_id_from_transportation_systems_map, serialize_without_system_field
@@ -206,13 +207,20 @@ if __name__ == "__main__":
     #mcp.run(transport="stdio") This was for local server
 
     # Fetch the port from environment variables (default to 8888 if not set)
-    port = int(os.environ.get("PORT", 8888))
+    port = int(os.environ.get("PORT", 3152))
     
-    # Start the server asynchronously
+    '''# Start the server asynchronously
     asyncio.run(
         mcp.run_sse_async(
             host="0.0.0.0",  # Expose on all network interfaces
             port=port,  # Port for remote access (or local)
             log_level="debug"  # Enable debug-level logging
         )
+    )'''
+
+    mcp.run(
+    transport="sse",
+    host="0.0.0.0",
+    port=port,
+    log_level="debug"
     )
