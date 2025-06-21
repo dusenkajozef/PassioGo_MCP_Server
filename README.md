@@ -8,7 +8,20 @@ An intelligent backend service for interacting with real-time transportation dat
 Name: Jozef Dusenka
 email: dusenka.jozef@gmail.com
 
-## Instructions to run on Claude Desktop
+## License
+This project is licensed under the Apache-2.0 License - see the LICENSE file for details.
+
+## Prerequisites
+- Python
+- uv package manager ('pip install uv')
+
+## Deployment Instructions
+
+For both examples the MCP server is being used by Claude Desktop.
+
+### Example 1: Local MCP Server Setup
+
+#### Instructions to run on Claude Desktop
 - This MCP server can be run on any other MCP client; however, the instructions to run might differ slightly.
 - Download Claude Desktop ((https://claude.ai/download))
 - Download this repository.
@@ -31,8 +44,41 @@ email: dusenka.jozef@gmail.com
 }
 ```
 - Save changes and restart Claude Desktop
-- Claude Desktop now should include the avaliable Passio Go MCP server tools but showing a small hammer icon
+- Claude Desktop now should include the available Passio Go MCP server tools but showing a small hammer icon
 - MCP client then automatically desides if any of the tools are needed to answer the question
+
+
+### Example 2: Remote MCP Server Setup
+
+**Note for Free Tier Users**: Claude Desktop's free tier doesn't natively support remote MCP servers. However, you can use the `mcp-remote` workaround shown below to connect to a remote server.
+
+#### Instructions to run on Claude Desktop
+- This MCP server can be run on any other MCP client; however, the instructions to run might differ slightly.
+- Download Claude Desktop ((https://claude.ai/download))
+- Download this repository.
+- Switch to the remote_mcp_server branch
+- Deploy the server to the preferred host using the command 'uv run main.py' which should start a Uvicorn ASGI application and listen on the default port 3152
+- Ensure the server is accessible via a public URL (e.g. https://your-server-address.com)
+- Open Claude Desktop -> File -> Settings -> Developer -> Edit Config
+- Open claude_desktop_config.json file
+- If empty, replace with:
+```json
+{
+    "mcpServers": {
+        "passioGo": {
+            "command": "npx",
+            "args": [
+                "mcp-remote",
+                "http://your-server-address:3152/sse"
+            ]
+        }
+    }
+}
+```
+- Save changes and restart Claude Desktop
+- Claude Desktop now should include the avaliable Passio Go MCP server tools but showing a small hammer icon
+- MCP client then automatically decides if any of the tools are needed to answer the question
+
 
 ## Example
 ### User:
